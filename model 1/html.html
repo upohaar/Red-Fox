@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>মামা রেস্টুরেন্ট | ডিজিটাল মেনু</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .menu-card:active { transform: scale(0.98); }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans pb-20">
+
+    <header class="bg-orange-500 text-white py-10 px-6 text-center rounded-b-[3rem] shadow-lg">
+        <h1 class="text-3xl font-bold italic">মামা রেস্টুরেন্ট</h1>
+        <p class="mt-2 text-orange-100">সেরা স্বাদে ঘরোয়া খাবার</p>
+    </header>
+
+    <div class="flex overflow-x-auto py-6 px-4 gap-4 no-scrollbar">
+        <button class="bg-orange-500 text-white px-6 py-2 rounded-full shadow-md whitespace-nowrap">সব খাবার</button>
+        <button class="bg-white text-gray-600 px-6 py-2 rounded-full shadow-sm border whitespace-nowrap">বিরিয়ানি</button>
+        <button class="bg-white text-gray-600 px-6 py-2 rounded-full shadow-sm border whitespace-nowrap">কাবাব</button>
+        <button class="bg-white text-gray-600 px-6 py-2 rounded-full shadow-sm border whitespace-nowrap">জুস ও পানীয়</button>
+    </div>
+
+    <main class="px-4 space-y-6">
+        <h2 class="text-xl font-bold text-gray-800">জনপ্রিয় খাবারসমূহ</h2>
+        
+        <div class="menu-card bg-white rounded-2xl shadow-sm overflow-hidden flex items-center p-3 border border-gray-100">
+            <img src="https://images.unsplash.com/photo-1589302168068-964664d93dc0?auto=format&fit=crop&w=150&q=80" alt="Biryani" class="w-24 h-24 object-cover rounded-xl">
+            <div class="ml-4 flex-1">
+                <h3 class="font-bold text-gray-800 text-lg">চিকেন বিরিয়ানি</h3>
+                <p class="text-gray-500 text-sm">স্পেশাল মসলায় রান্না করা সুগন্ধি চাল ও চিকেন।</p>
+                <p class="text-orange-600 font-bold mt-1">৳ ২২০</p>
+            </div>
+        </div>
+
+        <div class="menu-card bg-white rounded-2xl shadow-sm overflow-hidden flex items-center p-3 border border-gray-100">
+            <img src="https://images.unsplash.com/photo-1603360946369-dc9bb6258143?auto=format&fit=crop&w=150&q=80" alt="Kebab" class="w-24 h-24 object-cover rounded-xl">
+            <div class="ml-4 flex-1">
+                <h3 class="font-bold text-gray-800 text-lg">শিক কাবাব</h3>
+                <p class="text-gray-500 text-sm">খাসির মাংসের নরম ও রসালো কাবাব (২ পিস)।</p>
+                <p class="text-orange-600 font-bold mt-1">৳ ১৫০</p>
+            </div>
+        </div>
+
+        <div class="menu-card bg-white rounded-2xl shadow-sm overflow-hidden flex items-center p-3 border border-gray-100">
+            <img src="https://images.unsplash.com/photo-1544145945-f904253d0c7b?auto=format&fit=crop&w=150&q=80" alt="Juice" class="w-24 h-24 object-cover rounded-xl">
+            <div class="ml-4 flex-1">
+                <h3 class="font-bold text-gray-800 text-lg">ফ্রেশ লেবুর শরবত</h3>
+                <p class="text-gray-500 text-sm">ঠাণ্ডা ও সতেজকারী প্রাকৃতিক পানীয়।</p>
+                <p class="text-orange-600 font-bold mt-1">৳ ৪০</p>
+            </div>
+        </div>
+    </main>
+
+    <div class="fixed bottom-0 left-0 right-0 p-4 bg-white/80 backdrop-blur-md border-t flex gap-4">
+        <a href="tel:01700000000" class="flex-1 bg-gray-800 text-white text-center py-3 rounded-xl font-bold shadow-lg">
+            <i class="fas fa-phone-alt mr-2"></i> কল করুন
+        </a>
+        <a href="https://wa.me/8801700000000" class="flex-1 bg-green-500 text-white text-center py-3 rounded-xl font-bold shadow-lg">
+            <i class="fab fa-whatsapp mr-2"></i> হোয়াটসঅ্যাপ
+        </a>
+    </div>
+
+</body>
+</html>
