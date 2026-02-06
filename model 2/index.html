@@ -31,9 +31,9 @@
         </div>
     </nav>
 
-    <div class="max-w-md mx-auto pt-16 pb-32 px-4">
+    <div class="max-w-md mx-auto pt-20 pb-40 px-4">
         
-        <div x-show="currentPage === 'home'" x-cloak class="mt-4">
+        <div x-show="currentPage === 'home'" x-cloak class="space-y-6">
             <div class="relative h-48 flex items-center justify-center text-white overflow-hidden rounded-3xl shadow-lg">
                 <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=800&q=80" class="absolute inset-0 w-full h-full object-cover brightness-50" alt="Hero">
                 <div class="relative text-center">
@@ -42,7 +42,7 @@
                 </div>
             </div>
 
-            <h3 class="text-lg font-bold mt-8 mb-4 dark:text-white">মেনু দেখুন</h3>
+            <h3 class="text-lg font-bold dark:text-white">মেনু ক্যাটাগরি</h3>
             <div class="grid grid-cols-2 gap-4">
                 <template x-for="cat in categories">
                     <div @click="currentPage = cat.id; window.scrollTo(0,0)" class="cursor-pointer bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border dark:border-gray-700 text-center active:scale-95 transition-all">
@@ -56,13 +56,14 @@
         </div>
 
         <template x-for="cat in categories">
-            <div x-show="currentPage === cat.id" x-cloak class="mt-4">
+            <div x-show="currentPage === cat.id" x-cloak>
                 <div class="flex items-center justify-between mb-6 bg-orange-50 dark:bg-gray-800 p-3 rounded-xl border border-orange-100 dark:border-gray-700">
                     <button @click="currentPage = 'home'" class="flex items-center gap-2 text-primary font-bold">
                         <i data-lucide="chevron-left"></i> ফিরে যান
                     </button>
                     <h2 class="text-xl font-bold dark:text-white" x-text="cat.name"></h2>
-                    <div class="w-10"></div> </div>
+                    <div class="w-10"></div>
+                </div>
 
                 <div class="space-y-4">
                     <template x-for="item in menuData[cat.id]">
@@ -78,6 +79,17 @@
                 </div>
             </div>
         </template>
+
+        <footer class="mt-12 p-6 rounded-3xl bg-gray-100 dark:bg-gray-800 text-center border dark:border-gray-700">
+            <h4 class="font-bold mb-2 dark:text-white">আমাদের ঠিকানা</h4>
+            <p class="text-sm text-gray-600 dark:text-gray-400">১০২, বনানী রোড, ঢাকা, বাংলাদেশ</p>
+            <div class="flex justify-center gap-4 mt-4">
+                <a href="#" class="text-primary flex items-center gap-1 text-sm font-bold">
+                    <i data-lucide="map-pin" class="w-4 h-4"></i> ম্যাপে দেখুন
+                </a>
+            </div>
+            <p class="text-[10px] mt-6 text-gray-400 italic">© ২০২৬ মামা রেস্টুরেন্ট। সর্বস্বত্ব সংরক্ষিত।</p>
+        </footer>
     </div>
 
     <div class="fixed bottom-0 left-0 right-0 p-4 bg-white/90 dark:bg-gray-900/90 backdrop-blur-md border-t dark:border-gray-800 flex gap-4 max-w-md mx-auto z-50">
@@ -104,8 +116,7 @@
                         { name: 'ডিম মামলেট', price: '২০', desc: 'পিঁয়াজ-মরিচ দিয়ে ভাজা দেশি ডিম।', image: 'https://images.unsplash.com/photo-1525351484163-7529414344d8?w=200' }
                     ],
                     lunch: [
-                        { name: 'চিকেন বিরিয়ানি', price: '১৮০', desc: 'খাস বাসমতি চাল ও দেশি মুরগি।', image: 'https://images.unsplash.com/photo-1589302168068-964664d93dc0?w=200' },
-                        { name: 'গরুর মাংসের ভুনা', price: '২৫০', desc: 'গরম ভাতের সাথে কষানো গরুর মাংস।', image: 'https://images.unsplash.com/photo-1512058560366-cd2429555e54?w=200' }
+                        { name: 'চিকেন বিরিয়ানি', price: '১৮০', desc: 'খাস বাসমতি চাল ও দেশি মুরগি।', image: 'https://images.unsplash.com/photo-1589302168068-964664d93dc0?w=200' }
                     ],
                     dinner: [
                         { name: 'শিক কাবাব', price: '১৫০', desc: 'রুমালি রুটির সাথে বিফ শিক কাবাব।', image: 'https://images.unsplash.com/photo-1603360946369-dc9bb6258143?w=200' }
