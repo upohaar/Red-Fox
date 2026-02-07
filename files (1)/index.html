@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>মামা রেস্টুরেন্ট | অনলাইন অর্ডার</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Bengali:wght@400;600;700&family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="order-style.css">
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: { 
+                extend: { 
+                    colors: { 
+                        primary: '#f97316',
+                        secondary: '#fb923c'
+                    }
+                } 
+            }
+        }
+    </script>
+</head>
+<body class="bg-gradient-to-br from-orange-50 via-white to-orange-50" x-data="restaurantOrderApp()" x-init="init()">
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full z-50 backdrop-blur-xl shadow-lg bg-white/95 border-b border-orange-100">
+        <div class="max-w-7xl mx-auto px-4 h-16 flex justify-between items-center">
+            <div class="flex items-center gap-3 cursor-pointer" @click="currentPage = 'menu'">
+                <div class="w-10 h-10 bg-gradient-to-br from-orange-500 to-orange-600 rounded-full flex items-center justify-center shadow-lg">
+                    <i data-lucide="utensils" class="w-5 h-5 text-white"></i>
+                </div>
+                <h1 class="text-xl font-bold bg-gradient-to-r from-orange-600 to-orange-500 bg-clip-text text-transparent">মামা রেস্টুরেন্ট</h1>
+            </div>
+            
+            <div class="flex items-center gap-3">
+                <!-- Cart Icon -->
+                <button @click="currentPage = 'cart'" class="relative p-2 rounded-full bg-orange-100 text-orange-600 hover:bg-orange-200 transition-all">
+                    <i data-lucide="shopping-cart" class="w-5 h-5"></i>
+                    <span x-show="cart.length > 0" x-text="cart.length" class="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center font-bold"></span>
+                </button>
+                
+                <!-- User Icon -->
+                <button @click="currentPage = user ? 'account' : 'login'" class="p-2 rounded-full bg-orange-100 text-orange-600 hover:bg-orange-200 transition-all">
+                    <i data-lucide="user" class="w-5 h-5"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="max-w-7xl mx-auto pt-20 pb-8 px-4">
+        
+        <!-- Menu Page -->
+        <div x-show="currentPage === 'menu'" x-cloak>
+            <div class="text-center mb-8">
+                <h2 class="text-3xl font-bold mb-2">আমাদের মেনু</h2>
+                <p class="text-gray-600">পছন্দের খাবার বেছে নিন</p>
+            </div>
+
+            <!-- Category Tabs -->
+            <div class="flex gap-2 mb-6 overflow-x-auto no-scrollbar">
+                <template x-for="cat in categories" :key="cat.id">
+                    <button @click="selectedCategory = cat.id" 
+                            :class="selectedCategory === cat.id ? 'bg-orange-500 text-white' : 'bg-white text-gray-700'"
+                            class="px-6 py-2 rounded-full font-semibold whitespace-nowrap transition-all shadow-sm hover:shadow-md">
+                        <span x-text="cat.name"></span>
+                    </button>
+                </template>
+            </div>
+
+            <!-- Menu Items Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <template x-for="item in filteredMenu" :key="item.id">
+                    <div class="bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all border border-gray-100">
+                        <div class="relative h-48">
+                            <img :src="item.image" class="w-full h-full object-cover" :alt="item.name">
+                            <div x-show="item.popular" class="absolute top-3 right-3 bg-green-500 text-white text-xs px-3 py-1 rounded-full font-bold">
+                                জনপ্রিয়
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <h3 class="font-bold text-lg mb-1" x-text="item.name"></h3>
+                            <p class="text-xs text-gray-500 mb-3" x-text="item.desc"></p>
+                            <div class="flex items-center justify-between mb-3">
+                                <div class="flex items-baseline gap-1">
+                                    <span class="text-orange-600 font-bold text-xl">৳ <span x-text="item.price"></span></span>
+                                    <span x-show="item.oldPrice" class="text-xs text-gray-400 line-through" x-text="'৳ ' + item.oldPrice"></span>
+                                </div>
+                                <div class="flex items-center gap-1 text-yellow-500">
+                                    <i data-lucide="star" class="w-3 h-3 fill-current"></i>
+                                    <span class="text-xs font-semibold text-gray-600">৪.৮</span>
+                                </div>
+                            </div>
+                            <button @click="addToCart(item)" class="w-full bg-orange-500 hover:bg-orange-600 text-white py-2.5 rounded-xl font-semibold transition-all flex items-center justify-center gap-2">
+                                <i data-lucide="plus" class="w-4 h-4"></i>
+                                ঝুড়িতে যোগ করুন
+                            </button>
+                        </div>
+                    </div>
+                </template>
+            </div>
+        </div>
+
+        <!-- Cart Page -->
+        <div x-show="currentPage === 'cart'" x-cloak>
+            <div class="max-w-4xl mx-auto">
+                <div class="flex items-center gap-3 mb-6">
+                    <button @click="currentPage = 'menu'" class="p-2 hover:bg-gray-100 rounded-full">
+                        <i data-lucide="arrow-left" class="w-5 h-5"></i>
+                    </button>
+                    <h2 class="text-3xl font-bold">আপনার ঝুড়ি</h2>
+                </div>
+
+                <div x-show="cart.length === 0" class="text-center py-16">
+                    <i data-lucide="shopping-cart" class="w-20 h-20 mx-auto text-gray-300 mb-4"></i>
+                    <p class="text-gray-500 mb-4">আপনার ঝুড়ি খালি</p>
+                    <button @click="currentPage = 'menu'" class="px-6 py-2 bg-orange-500 text-white rounded-xl font-semibold">
+                        মেনু দেখুন
+                    </button>
+                </div>
+
+                <div x-show="cart.length > 0" class="space-y-4">
+                    <template x-for="(item, index) in cart" :key="index">
+                        <div class="bg-white rounded-xl p-4 shadow-md flex gap-4">
+                            <img :src="item.image" class="w-24 h-24 object-cover rounded-lg" :alt="item.name">
+                            <div class="flex-1">
+                                <h3 class="font-bold mb-1" x-text="item.name"></h3>
+                                <p class="text-orange-600 font-bold mb-2">৳ <span x-text="item.price"></span></p>
+                                <div class="flex items-center gap-3">
+                                    <button @click="updateQuantity(index, -1)" class="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center hover:bg-gray-300">
+                                        <i data-lucide="minus" class="w-4 h-4"></i>
+                                    </button>
+                                    <span class="font-semibold w-8 text-center" x-text="item.quantity"></span>
+                                    <button @click="updateQuantity(index, 1)" class="w-8 h-8 bg-orange-500 text-white rounded-full flex items-center justify-center hover:bg-orange-600">
+                                        <i data-lucide="plus" class="w-4 h-4"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <button @click="removeFromCart(index)" class="text-red-500 hover:text-red-600">
+                                <i data-lucide="trash-2" class="w-5 h-5"></i>
+                            </button>
+                        </div>
+                    </template>
+
+                    <!-- Coupon Code -->
+                    <div class="bg-white rounded-xl p-4 shadow-md">
+                        <label class="block text-sm font-semibold mb-2">কুপন কোড</label>
+                        <div class="flex gap-2">
+                            <input x-model="couponCode" type="text" placeholder="কুপন কোড লিখুন" class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-orange-500">
+                            <button @click="applyCoupon()" class="px-6 py-2 bg-orange-500 text-white rounded-lg font-semibold hover:bg-orange-600">
+                                প্রয়োগ করুন
+                            </button>
+                        </div>
+                        <p x-show="discount > 0" class="text-green-600 text-sm mt-2">✓ ছাড় প্রয়োগ হয়েছে!</p>
+                    </div>
+
+                    <!-- Total -->
+                    <div class="bg-gradient-to-r from-orange-500 to-orange-600 rounded-xl p-6 text-white shadow-lg">
+                        <div class="space-y-2">
+                            <div class="flex justify-between">
+                                <span>সাব-টোটাল:</span>
+                                <span class="font-semibold">৳ <span x-text="subtotal"></span></span>
+                            </div>
+                            <div x-show="discount > 0" class="flex justify-between text-green-200">
+                                <span>ছাড়:</span>
+                                <span class="font-semibold">- ৳ <span x-text="discount"></span></span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span>ডেলিভারি চার্জ:</span>
+                                <span class="font-semibold">৳ <span x-text="deliveryCharge"></span></span>
+                            </div>
+                            <div class="border-t border-white/30 pt-2 flex justify-between text-xl font-bold">
+                                <span>মোট:</span>
+                                <span>৳ <span x-text="total"></span></span>
+                            </div>
+                        </div>
+                        <button @click="currentPage = user ? 'checkout' : 'login'" class="w-full mt-4 bg-white text-orange-600 py-3 rounded-xl font-bold hover:bg-gray-100 transition-all">
+                            চেকআউট করুন
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Login Page -->
+        <div x-show="currentPage === 'login'" x-cloak>
+            <div class="max-w-md mx-auto bg-white rounded-2xl shadow-xl p-8">
+                <div class="text-center mb-6">
+                    <div class="w-16 h-16 bg-gradient-to-br from-orange-500 to-orange-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i data-lucide="user" class="w-8 h-8 text-white"></i>
+                    </div>
+                    <h2 class="text-2xl font-bold mb-2">লগইন করুন</h2>
+                    <p class="text-gray-600">আপনার একাউন্টে প্রবেশ করুন</p>
+                </div>
+
+                <form @submit.prevent="login()" class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-semibold mb-2">ফোন নম্বর</label>
+                        <input x-model="loginData.phone" type="tel" placeholder="০১৭xxxxxxxx" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-orange-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold mb-2">পাসওয়ার্ড</label>
+                        <input x-model="loginData.password" type="password" placeholder="••••••••" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-orange-500">
+                    </div>
+                    <button type="submit" class="w-full bg-orange-500 text-white py-3 rounded-lg font-bold hover:bg-orange-600 transition-all">
+                        লগইন করুন
+                    </button>
+                </form>
+
+                <div class="text-center mt-6">
+                    <p class="text-gray-600">একাউন্ট নেই? <button @click="currentPage = 'register'" class="text-orange-600 font-semibold">রেজিস্টার করুন</button></p>
+                </div>
+
+                <div class="mt-6 text-center">
+                    <button @click="currentPage = 'menu'" class="text-gray-500 text-sm">পরে লগইন করব</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Register Page -->
+        <div x-show="currentPage === 'register'" x-cloak>
+            <div class="max-w-md mx-auto bg-white rounded-2xl shadow-xl p-8">
+                <div class="text-center mb-6">
+                    <h2 class="text-2xl font-bold mb-2">রেজিস্টার করুন</h2>
+                    <p class="text-gray-600">নতুন একাউন্ট তৈরি করুন</p>
+                </div>
+
+                <form @submit.prevent="register()" class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-semibold mb-2">নাম</label>
+                        <input x-model="registerData.name" type="text" placeholder="আপনার নাম" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-orange-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold mb-2">ফোন নম্বর</label>
+                        <input x-model="registerData.phone" type="tel" placeholder="০১৭xxxxxxxx" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-orange-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold mb-2">ঠিকানা</label>
+                        <textarea x-model="registerData.address" placeholder="আপনার ডেলিভারি ঠিকানা" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-orange-500" rows="3"></textarea>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold mb-2">পাসওয়ার্ড</label>
+                        <input x-model="registerData.password" type="password" placeholder="••••••••" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-orange-500">
+                    </div>
+                    <button type="submit" class="w-full bg-orange-500 text-white py-3 rounded-lg font-bold hover:bg-orange-600 transition-all">
+                        রেজিস্টার করুন
+                    </button>
+                </form>
+
+                <div class="text-center mt-6">
+                    <p class="text-gray-600">ইতিমধ্যে একাউন্ট আছে? <button @click="currentPage = 'login'" class="text-orange-600 font-semibold">লগইন করুন</button></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Checkout Page -->
+        <div x-show="currentPage === 'checkout'" x-cloak>
+            <div class="max-w-4xl mx-auto">
+                <div class="flex items-center gap-3 mb-6">
+                    <button @click="currentPage = 'cart'" class="p-2 hover:bg-gray-100 rounded-full">
+                        <i data-lucide="arrow-left" class="w-5 h-5"></i>
+                    </button>
+                    <h2 class="text-3xl font-bold">চেকআউট</h2>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-6">
+                    <!-- Delivery Info -->
+                    <div class="bg-white rounded-xl p-6 shadow-md">
+                        <h3 class="text-xl font-bold mb-4">ডেলিভারি তথ্য</h3>
+                        <div class="space-y-3">
+                            <div>
+                                <label class="block text-sm font-semibold mb-1">নাম</label>
+                                <input x-model="user.name" type="text" readonly class="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-50">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold mb-1">ফোন</label>
+                                <input x-model="user.phone" type="tel" readonly class="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-50">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold mb-1">ঠিকানা</label>
+                                <textarea x-model="user.address" readonly class="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-50" rows="3"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Payment Method -->
+                    <div class="bg-white rounded-xl p-6 shadow-md">
+                        <h3 class="text-xl font-bold mb-4">পেমেন্ট পদ্ধতি</h3>
+                        <div class="space-y-3">
+                            <label class="flex items-center p-4 border-2 rounded-lg cursor-pointer hover:border-orange-500 transition-all" :class="paymentMethod === 'bkash' ? 'border-orange-500 bg-orange-50' : 'border-gray-200'">
+                                <input type="radio" x-model="paymentMethod" value="bkash" class="w-5 h-5 text-orange-500">
+                                <div class="ml-3 flex items-center gap-3">
+                                    <div class="w-12 h-12 bg-pink-100 rounded-lg flex items-center justify-center">
+                                        <span class="font-bold text-pink-600">bKash</span>
+                                    </div>
+                                    <span class="font-semibold">bKash পেমেন্ট</span>
+                                </div>
+                            </label>
+
+                            <label class="flex items-center p-4 border-2 rounded-lg cursor-pointer hover:border-orange-500 transition-all" :class="paymentMethod === 'nagad' ? 'border-orange-500 bg-orange-50' : 'border-gray-200'">
+                                <input type="radio" x-model="paymentMethod" value="nagad" class="w-5 h-5 text-orange-500">
+                                <div class="ml-3 flex items-center gap-3">
+                                    <div class="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
+                                        <span class="font-bold text-orange-600">Nagad</span>
+                                    </div>
+                                    <span class="font-semibold">Nagad পেমেন্ট</span>
+                                </div>
+                            </label>
+
+                            <label class="flex items-center p-4 border-2 rounded-lg cursor-pointer hover:border-orange-500 transition-all" :class="paymentMethod === 'cod' ? 'border-orange-500 bg-orange-50' : 'border-gray-200'">
+                                <input type="radio" x-model="paymentMethod" value="cod" class="w-5 h-5 text-orange-500">
+                                <div class="ml-3 flex items-center gap-3">
+                                    <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+                                        <i data-lucide="banknote" class="w-6 h-6 text-green-600"></i>
+                                    </div>
+                                    <span class="font-semibold">ক্যাশ অন ডেলিভারি</span>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Order Summary -->
+                <div class="bg-gradient-to-r from-orange-500 to-orange-600 rounded-xl p-6 mt-6 text-white shadow-lg">
+                    <h3 class="text-xl font-bold mb-4">অর্ডার সারসংক্ষেপ</h3>
+                    <div class="space-y-2 mb-4">
+                        <template x-for="item in cart" :key="item.id">
+                            <div class="flex justify-between text-sm">
+                                <span><span x-text="item.name"></span> x <span x-text="item.quantity"></span></span>
+                                <span>৳ <span x-text="item.price * item.quantity"></span></span>
+                            </div>
+                        </template>
+                    </div>
+                    <div class="border-t border-white/30 pt-3 space-y-2">
+                        <div class="flex justify-between">
+                            <span>সাব-টোটাল:</span>
+                            <span class="font-semibold">৳ <span x-text="subtotal"></span></span>
+                        </div>
+                        <div x-show="discount > 0" class="flex justify-between text-green-200">
+                            <span>ছাড়:</span>
+                            <span class="font-semibold">- ৳ <span x-text="discount"></span></span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>ডেলিভারি:</span>
+                            <span class="font-semibold">৳ <span x-text="deliveryCharge"></span></span>
+                        </div>
+                        <div class="border-t border-white/30 pt-2 flex justify-between text-2xl font-bold">
+                            <span>মোট:</span>
+                            <span>৳ <span x-text="total"></span></span>
+                        </div>
+                    </div>
+                    <button @click="placeOrder()" class="w-full mt-6 bg-white text-orange-600 py-4 rounded-xl font-bold hover:bg-gray-100 transition-all text-lg">
+                        অর্ডার নিশ্চিত করুন
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Order Confirmation Page -->
+        <div x-show="currentPage === 'order-success'" x-cloak>
+            <div class="max-w-md mx-auto bg-white rounded-2xl shadow-xl p-8 text-center">
+                <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i data-lucide="check-circle" class="w-12 h-12 text-green-600"></i>
+                </div>
+                <h2 class="text-2xl font-bold mb-2">অর্ডার সফল হয়েছে!</h2>
+                <p class="text-gray-600 mb-4">আপনার অর্ডার নম্বর: <span class="font-bold text-orange-600" x-text="currentOrder.id"></span></p>
+                <p class="text-sm text-gray-500 mb-6">আমরা শীঘ্রই আপনার খাবার ডেলিভারি করব</p>
+                
+                <div class="bg-gray-50 rounded-lg p-4 mb-6 text-left">
+                    <h3 class="font-bold mb-2">অর্ডার বিবরণ:</h3>
+                    <div class="text-sm space-y-1">
+                        <p>পেমেন্ট: <span class="font-semibold" x-text="getPaymentMethodName(currentOrder.paymentMethod)"></span></p>
+                        <p>মোট: <span class="font-semibold">৳ <span x-text="currentOrder.total"></span></span></p>
+                        <p>স্ট্যাটাস: <span class="font-semibold text-orange-600">প্রক্রিয়াধীন</span></p>
+                    </div>
+                </div>
+
+                <div class="space-y-3">
+                    <button @click="currentPage = 'orders'" class="w-full bg-orange-500 text-white py-3 rounded-lg font-semibold hover:bg-orange-600">
+                        আমার অর্ডার দেখুন
+                    </button>
+                    <button @click="currentPage = 'menu'; cart = []" class="w-full bg-gray-200 text-gray-700 py-3 rounded-lg font-semibold hover:bg-gray-300">
+                        মেনুতে ফিরে যান
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- My Orders Page -->
+        <div x-show="currentPage === 'orders'" x-cloak>
+            <div class="max-w-4xl mx-auto">
+                <div class="flex items-center gap-3 mb-6">
+                    <button @click="currentPage = 'account'" class="p-2 hover:bg-gray-100 rounded-full">
+                        <i data-lucide="arrow-left" class="w-5 h-5"></i>
+                    </button>
+                    <h2 class="text-3xl font-bold">আমার অর্ডার</h2>
+                </div>
+
+                <div x-show="orders.length === 0" class="text-center py-16 bg-white rounded-xl">
+                    <i data-lucide="package" class="w-20 h-20 mx-auto text-gray-300 mb-4"></i>
+                    <p class="text-gray-500">কোনো অর্ডার নেই</p>
+                </div>
+
+                <div class="space-y-4">
+                    <template x-for="order in orders" :key="order.id">
+                        <div class="bg-white rounded-xl p-6 shadow-md">
+                            <div class="flex justify-between items-start mb-4">
+                                <div>
+                                    <h3 class="font-bold text-lg">অর্ডার #<span x-text="order.id"></span></h3>
+                                    <p class="text-sm text-gray-500" x-text="order.date"></p>
+                                </div>
+                                <span class="px-3 py-1 rounded-full text-sm font-semibold" 
+                                      :class="order.status === 'delivered' ? 'bg-green-100 text-green-600' : 'bg-orange-100 text-orange-600'"
+                                      x-text="getStatusText(order.status)"></span>
+                            </div>
+                            
+                            <div class="space-y-2 mb-4 pb-4 border-b">
+                                <template x-for="item in order.items" :key="item.id">
+                                    <div class="flex justify-between text-sm">
+                                        <span><span x-text="item.name"></span> x <span x-text="item.quantity"></span></span>
+                                        <span class="font-semibold">৳ <span x-text="item.price * item.quantity"></span></span>
+                                    </div>
+                                </template>
+                            </div>
+
+                            <div class="flex justify-between items-center">
+                                <div>
+                                    <p class="text-sm text-gray-600">পেমেন্ট: <span class="font-semibold" x-text="getPaymentMethodName(order.paymentMethod)"></span></p>
+                                    <p class="font-bold text-lg text-orange-600">মোট: ৳ <span x-text="order.total"></span></p>
+                                </div>
+                                <button @click="trackOrder(order)" class="px-4 py-2 bg-orange-500 text-white rounded-lg font-semibold hover:bg-orange-600">
+                                    ট্র্যাক করুন
+                                </button>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </div>
+        </div>
+
+        <!-- Track Order Modal -->
+        <div x-show="showTrackingModal" @click.self="showTrackingModal = false" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" x-cloak>
+            <div class="bg-white rounded-2xl p-6 max-w-md w-full">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-xl font-bold">অর্ডার ট্র্যাকিং</h3>
+                    <button @click="showTrackingModal = false" class="p-2 hover:bg-gray-100 rounded-full">
+                        <i data-lucide="x" class="w-5 h-5"></i>
+                    </button>
+                </div>
+
+                <div x-show="trackingOrder" class="space-y-6">
+                    <div class="text-center">
+                        <p class="text-gray-600">অর্ডার নম্বর</p>
+                        <p class="font-bold text-2xl text-orange-600" x-text="trackingOrder?.id"></p>
+                    </div>
+
+                    <div class="space-y-4">
+                        <div class="flex items-start gap-4">
+                            <div class="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center flex-shrink-0">
+                                <i data-lucide="check" class="w-5 h-5 text-white"></i>
+                            </div>
+                            <div class="flex-1">
+                                <p class="font-semibold">অর্ডার গৃহীত</p>
+                                <p class="text-sm text-gray-500">আপনার অর্ডার কনফার্ম হয়েছে</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start gap-4">
+                            <div class="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0" 
+                                 :class="['preparing', 'ready', 'on-the-way', 'delivered'].includes(trackingOrder?.status) ? 'bg-green-500' : 'bg-gray-300'">
+                                <i data-lucide="chef-hat" class="w-5 h-5 text-white"></i>
+                            </div>
+                            <div class="flex-1">
+                                <p class="font-semibold">প্রস্তুত করা হচ্ছে</p>
+                                <p class="text-sm text-gray-500">রান্না চলছে</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start gap-4">
+                            <div class="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0"
+                                 :class="['ready', 'on-the-way', 'delivered'].includes(trackingOrder?.status) ? 'bg-green-500' : 'bg-gray-300'">
+                                <i data-lucide="package-check" class="w-5 h-5 text-white"></i>
+                            </div>
+                            <div class="flex-1">
+                                <p class="font-semibold">প্রস্তুত</p>
+                                <p class="text-sm text-gray-500">ডেলিভারির জন্য তৈরি</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start gap-4">
+                            <div class="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0"
+                                 :class="['on-the-way', 'delivered'].includes(trackingOrder?.status) ? 'bg-green-500' : 'bg-gray-300'">
+                                <i data-lucide="truck" class="w-5 h-5 text-white"></i>
+                            </div>
+                            <div class="flex-1">
+                                <p class="font-semibold">পথে আছে</p>
+                                <p class="text-sm text-gray-500">ডেলিভারি ম্যান রওনা দিয়েছে</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start gap-4">
+                            <div class="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0"
+                                 :class="trackingOrder?.status === 'delivered' ? 'bg-green-500' : 'bg-gray-300'">
+                                <i data-lucide="home" class="w-5 h-5 text-white"></i>
+                            </div>
+                            <div class="flex-1">
+                                <p class="font-semibold">ডেলিভার হয়েছে</p>
+                                <p class="text-sm text-gray-500">আপনার দোরগোড়ায়</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Account Page -->
+        <div x-show="currentPage === 'account'" x-cloak>
+            <div class="max-w-4xl mx-auto">
+                <h2 class="text-3xl font-bold mb-6">আমার একাউন্ট</h2>
+
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="bg-white rounded-xl p-6 shadow-md">
+                        <h3 class="text-xl font-bold mb-4">প্রোফাইল তথ্য</h3>
+                        <div class="space-y-3">
+                            <div>
+                                <label class="text-sm text-gray-600">নাম</label>
+                                <p class="font-semibold" x-text="user?.name"></p>
+                            </div>
+                            <div>
+                                <label class="text-sm text-gray-600">ফোন</label>
+                                <p class="font-semibold" x-text="user?.phone"></p>
+                            </div>
+                            <div>
+                                <label class="text-sm text-gray-600">ঠিকানা</label>
+                                <p class="font-semibold" x-text="user?.address"></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="space-y-4">
+                        <button @click="currentPage = 'orders'" class="w-full bg-white hover:bg-gray-50 rounded-xl p-4 shadow-md flex items-center justify-between transition-all">
+                            <div class="flex items-center gap-3">
+                                <i data-lucide="package" class="w-6 h-6 text-orange-600"></i>
+                                <span class="font-semibold">আমার অর্ডার</span>
+                            </div>
+                            <i data-lucide="chevron-right" class="w-5 h-5 text-gray-400"></i>
+                        </button>
+
+                        <button @click="logout()" class="w-full bg-red-50 hover:bg-red-100 rounded-xl p-4 shadow-md flex items-center justify-between transition-all">
+                            <div class="flex items-center gap-3">
+                                <i data-lucide="log-out" class="w-6 h-6 text-red-600"></i>
+                                <span class="font-semibold text-red-600">লগআউট</span>
+                            </div>
+                            <i data-lucide="chevron-right" class="w-5 h-5 text-gray-400"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="order-script.js"></script>
+</body>
+</html>
