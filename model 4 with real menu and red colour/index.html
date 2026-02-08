@@ -78,8 +78,7 @@
             <!-- Hero Section -->
             <div
                 class="relative h-56 flex items-center justify-center text-white overflow-hidden rounded-3xl shadow-2xl">
-                <img src="images/profile pic.jpeg"
-                    class="absolute inset-0 w-full h-full object-cover" alt="Hero">
+                <img src="images/profile pic.jpeg" class="absolute inset-0 w-full h-full object-cover" alt="Hero">
                 <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent"></div>
                 <div class="relative text-center px-6 z-10">
                     <div
@@ -124,7 +123,7 @@
                             :style="`animation-delay: ${index * 0.1}s`">
                             <div class="w-16 h-16 mx-auto mb-4 rounded-2xl flex items-center justify-center shadow-lg floating"
                                 :class="cat.gradient">
-                                <i :data-lucide="cat.icon" class="text-white w-8 h-8"></i>
+                                <img :src="cat.icon" :alt="cat.name" class="rounded-2xl w-full h-full object-cover">
                             </div>
                             <span class="font-bold text-gray-800 dark:text-gray-200 block mb-1"
                                 x-text="cat.name"></span>
@@ -164,12 +163,12 @@
                         <div class="flex items-center gap-3">
                             <div
                                 class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-sm">
-                                <i :data-lucide="cat.icon" class="w-7 h-7"></i>
+                                <img :src="cat.icon" :alt="cat.name" class="rounded-2xl w-full h-full object-cover">
                             </div>
                             <div>
                                 <h2 class="text-2xl font-bold" x-text="cat.name"></h2>
                                 <p class="text-sm text-white/80"
-                                    x-text="menuData[cat.id].length + ' টি আইটেম পাওয়া গেছে'"></p>
+                                    x-text="menuData[cat.id].length + ' টি আইটেম '"></p>
                             </div>
                         </div>
                     </div>
@@ -243,13 +242,13 @@
                     <a href="https://www.facebook.com/profile.php?id=100089214620922"><i data-lucide="facebook"
                             class="w-5 h-5 text-blue-500 cursor-pointer hover:scale-110 transition-transform"></i></a>
 
-                    <i data-lucide="instagram"
-                        class="w-5 h-5 text-pink-500 cursor-pointer hover:scale-110 transition-transform"></i>
+                    
                 </div>
                 <p class="text-xs text-gray-400">© ২০২৬ RED FOX Pizza Hot & Tasty সর্বস্বত্ব সংরক্ষিত।</p>
                 <p class="text-xs text-gray-400 mt-2 flex items-center justify-center gap-1 italic">
                     Designed & Developed by
-                    <a href="https://www.facebook.com/sumaiyanobi.upohaar" class="text-primary font-bold hover:underline transition-all">Sumaiya Nobe Upohaar</a>
+                    <a href="https://www.facebook.com/sumaiyanobi.upohaar"
+                        class="text-primary font-bold hover:underline transition-all">Sumaiya Nobe Upohaar</a>
                 </p>
             </div>
         </footer>

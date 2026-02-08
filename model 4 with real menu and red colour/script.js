@@ -6,42 +6,42 @@ function restaurantApp() {
             { 
                 id: 'burgers', 
                 name: 'Burger & Snacks', 
-                icon: 'sandwich',
+                icon: './images/Burger & Snacks.jpg',
                 gradient: 'bg-gradient-to-br from-red-400 to-red-500',
                 count: 19
             },
             { 
                 id: 'drinks', 
                 name: 'Drinks & Shakes', 
-                icon: 'coffee',
+                icon: './images/drinks.png',
                 gradient: 'bg-gradient-to-br from-blue-400 to-cyan-500',
                 count: 14
             },
             { 
                 id: 'shawarma', 
                 name: 'Sandwich & Shawarma', 
-                icon: 'utensils',
+                icon: './images/Sandwich & Shawarma.png',
                 gradient: 'bg-gradient-to-br from-green-400 to-emerald-500',
                 count: 9
             },
             { 
                 id: 'juice', 
                 name: 'জুস (Juice)', 
-                icon: 'cup-soda',
+                icon: './images/juices.png',
                 gradient: 'bg-gradient-to-br from-red-400 to-yellow-500',
                 count: 11
             },
             { 
                 id: 'pizza', 
                 name: 'Pizza', 
-                icon: 'pizza',
+                icon: './images/pizza.png',
                 gradient: 'bg-gradient-to-br from-purple-400 to-pink-500',
                 count: 7
             },
             { 
                 id: 'fuchka', 
                 name: 'ফুসকা ও চটপটি', 
-                icon: 'soup',
+                icon: './images/fuska.png',
                 gradient: 'bg-gradient-to-br from-amber-400 to-red-500',
                 count: 7
             }
@@ -55,119 +55,119 @@ function restaurantApp() {
                     name: 'Student Burger', 
                     price: '৬০', 
                     desc: 'Perfect burger for students - tasty and affordable', 
-                    image: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=300',
+                    image: './images/burger and snacks/student burger.png',
                     popular: true
                 },
                 { 
                     name: 'Crispy Chicken Burger', 
                     price: '৭০', 
                     desc: 'Crispy fried chicken patty with fresh veggies', 
-                    image: 'https://images.unsplash.com/photo-1586190848861-99aa4a171e90?w=300',
+                    image: './images/burger and snacks/Crispy Chicken Burger.png',
                     popular: true
                 },
                 { 
                     name: 'Dragon Burger', 
                     price: '৮০', 
                     desc: 'Spicy dragon sauce with grilled chicken', 
-                    image: 'https://images.unsplash.com/photo-1550547660-d9450f859349?w=300'
+                    image: './images/burger and snacks/Dragon Burger.png'
                 },
                 { 
                     name: 'Naga with Chicken Tikka', 
                     price: '৯০', 
                     desc: 'Fiery naga sauce with juicy chicken tikka', 
-                    image: 'https://images.unsplash.com/photo-1572802419224-296b0aeee0d9?w=300'
+                    image: './images/burger and snacks/Naga with Chicken Tikka.png'
                 },
                 { 
                     name: 'Smoked Burger', 
                     price: '৯০', 
                     desc: 'Smoky flavored beef patty with special sauce', 
-                    image: 'https://images.unsplash.com/photo-1553979459-d2229ba7433b?w=300'
+                    image: './images/burger and snacks/Smoked Burger.png'
                 },
                 { 
                     name: 'Crispy Chicken Burger (Big)', 
                     price: '১২০', 
                     desc: 'Larger version with double crispy chicken', 
-                    image: 'https://images.unsplash.com/photo-1585238342024-78d387f4a707?w=300',
+                    image: './images/burger and snacks/Crispy Chicken Burger (Big).png',
                     popular: true
                 },
                 { 
                     name: 'Smoked with Naga', 
                     price: '১০০', 
                     desc: 'Perfect blend of smoke and spice', 
-                    image: 'https://images.unsplash.com/photo-1594212699903-ec8a3eca50f5?w=300'
+                    image: './images/burger and snacks/Smoked with Naga.png'
                 },
                 { 
                     name: 'Chicken Burger', 
                     price: '৯০', 
                     desc: 'Classic grilled chicken burger', 
-                    image: 'https://images.unsplash.com/photo-1606755962773-d324e0a13086?w=300'
+                    image: './images/burger and snacks/Chicken Burger.png'
                 },
                 { 
                     name: 'Sub Burger', 
                     price: '১২০', 
                     desc: 'Long sub-style burger loaded with toppings', 
-                    image: 'https://images.unsplash.com/photo-1619740455993-a42d6b716b0d?w=300'
+                    image: './images/burger and snacks/Sub Burger.png'
                 },
                 { 
                     name: 'Fried Burger', 
                     price: '১৩০', 
                     desc: 'Deep fried burger with crispy coating', 
-                    image: 'https://images.unsplash.com/photo-1551782450-a2132b4ba21d?w=300'
+                    image: './images/burger and snacks/Fried Burger.png'
                 },
                 { 
                     name: 'Crispy Chicken with Cheese Burger', 
                     price: '১৩০', 
                     desc: 'Crispy chicken topped with melted cheese', 
-                    image: 'https://images.unsplash.com/photo-1591234555487-7d6828caac17?w=300'
+                    image: './images/burger and snacks/Crispy Chicken with Cheese Burger.jpg'
                 },
                 { 
                     name: 'Cheese Burger (Big)', 
                     price: '১৩০', 
                     desc: 'Loaded with extra cheese and beef patty', 
-                    image: 'https://images.unsplash.com/photo-1572448862527-d3c904757de6?w=300'
+                    image: './images/burger and snacks/cheese burger big.png'
                 },
                 { 
                     name: 'Red Fox Special Burger', 
                     price: '১৫০', 
                     desc: 'Our signature burger with secret sauce', 
-                    image: 'https://images.unsplash.com/photo-1561758033-d89a9ad46330?w=300',
+                    image: './images/burger and snacks/Red Fox Special Burger.png',
                     popular: true
                 },
                 { 
                     name: 'Jumbo Burger', 
                     price: '২০০', 
                     desc: 'Massive burger for big appetite', 
-                    image: 'https://images.unsplash.com/photo-1520072959219-c595dc870360?w=300'
+                    image: './images/burger and snacks/Jumbo Burger.png'
                 },
                 { 
                     name: 'Chicken Fry', 
                     price: '৮০', 
                     desc: 'Golden fried chicken pieces', 
-                    image: 'https://images.unsplash.com/photo-1626645738196-c2a7c87a8f58?w=300'
+                    image: './images/burger and snacks/chicken fry.png'
                 },
                 { 
                     name: 'Spicy Chicken', 
                     price: '৯০', 
                     desc: 'Hot and spicy fried chicken', 
-                    image: 'https://images.unsplash.com/photo-1562967914-608f82629710?w=300'
+                    image: './images/burger and snacks/Spicy Chicken.png'
                 },
                 { 
                     name: 'French Fries', 
                     price: '১০০', 
                     desc: 'Crispy golden french fries', 
-                    image: 'https://images.unsplash.com/photo-1573080496219-bb080dd4f877?w=300'
+                    image: './images/burger and snacks/french fries.png'
                 },
                 { 
                     name: 'French Fries with Sauce', 
                     price: '১৫০', 
                     desc: 'Fries served with special dipping sauces', 
-                    image: 'https://images.unsplash.com/photo-1630431341973-02e4a71becc4?w=300'
+                    image: './images/burger and snacks/French Fries with Sauce.png'
                 },
                 { 
                     name: 'Pata Tina Chicken Alu Pora', 
                     price: '২০০', 
                     desc: 'Stuffed pastry with chicken and mashed potato', 
-                    image: 'https://images.unsplash.com/photo-1601050690597-df0568f70950?w=300'
+                    image: './images/burger and snacks/Pata Tina Chicken Alu Pora.png'
                 }
             ],
             
